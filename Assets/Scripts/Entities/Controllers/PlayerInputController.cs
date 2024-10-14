@@ -46,6 +46,7 @@ public class PlayerInputController : TopDownController
         {
             blockControl = true;
             CallMoveEvent(Vector2.zero);
+            isAttacking = false;
         }
         else
         {
@@ -87,7 +88,7 @@ public class PlayerInputController : TopDownController
     public void OnFire(InputValue value)
     {
         if (blockControl) return;
-
+        
         isAttacking = value.isPressed;
     }
 

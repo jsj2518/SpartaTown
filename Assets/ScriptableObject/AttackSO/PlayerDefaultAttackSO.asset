@@ -14,17 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 1
   delay: 0.15
-  power: 2
-  speed: 10
-  target:
+  power: 1
+  speed: 5
+  target1:
+    serializedVersion: 2
+    m_Bits: 64
+  target2:
     serializedVersion: 2
     m_Bits: 256
-  isOnKnockBack: 1
+  isOnKnockBack: 0
   knockbackPower: 5
   knockbackTime: 0.1
-  bulletNameTag: 
-  duration: 5
-  spread: 4
+  bulletNameTag: Poke
+  duration: 0.25
+  spread: 0
   numberOfProjectilesPerShot: 1
   multipleProjectilesAngle: 7
   projectileColor: {r: 1, g: 1, b: 1, a: 1}

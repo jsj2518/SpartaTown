@@ -8,7 +8,8 @@ public class AttackSO : ScriptableObject
     public float delay;
     public float power;
     public float speed;
-    public LayerMask target;
+    public LayerMask target1;
+    public LayerMask target2;
 
     [Header("Knock Back Info")]
     public bool isOnKnockBack;

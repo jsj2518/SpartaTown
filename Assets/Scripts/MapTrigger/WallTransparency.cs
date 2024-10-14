@@ -12,12 +12,18 @@ public class WallTransparency : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        gotoTransparency = 0.6f;
+        if (GameManager.Instance.IsLayerMatchedWithPlayer(collision.gameObject.layer))
+        {
+            gotoTransparency = 0.6f;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        gotoTransparency = 1.0f;
+        if (GameManager.Instance.IsLayerMatchedWithPlayer(collision.gameObject.layer))
+        {
+            gotoTransparency = 1.0f;
+        }
     }
 
     private void Update()

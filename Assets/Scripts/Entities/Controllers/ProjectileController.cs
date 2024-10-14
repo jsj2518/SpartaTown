@@ -11,7 +11,6 @@ public class ProjectileController : MonoBehaviour
 #pragma warning disable CS0108 // 멤버가 상속된 멤버를 숨깁니다. new 키워드가 없습니다.
     private Rigidbody2D rigidbody;
 #pragma warning restore CS0108 // 멤버가 상속된 멤버를 숨깁니다. new 키워드가 없습니다.
-    private TrailRenderer trailRenderer;
     private SpriteRenderer spriteRenderer;
 
     private RangedAttackSO attackData;
@@ -23,7 +22,6 @@ public class ProjectileController : MonoBehaviour
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        trailRenderer = GetComponent<TrailRenderer>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -35,12 +33,15 @@ public class ProjectileController : MonoBehaviour
         }
 
         currentDuration += Time.deltaTime;
+
+        Color color = attackData.projectileColor;
+        color.a = attackData.projectileColor.a * (attackData.duration - currentDuration) / attackData.duration;
+        spriteRenderer.color = color;
+
         if (currentDuration > attackData.duration)
         {
             DestroyProjectile(transform.position, false);
         }
-
-        rigidbody.velocity = direction * attackData.speed;
     }
 
     public void InitializeAttack(Vector2 direction, RangedAttackSO attackData)
@@ -49,11 +50,12 @@ public class ProjectileController : MonoBehaviour
         this.direction = direction;
 
         UpdateProjectileSprite();
-        trailRenderer.Clear();
         currentDuration = 0;
         spriteRenderer.color = attackData.projectileColor;
 
         transform.right = this.direction;
+
+        rigidbody.velocity = direction * attackData.speed;
 
         isReady = true;
     }
@@ -70,7 +72,8 @@ public class ProjectileController : MonoBehaviour
             Vector2 destoyPosition = collision.ClosestPoint(transform.position) - direction * 0.2f;
             DestroyProjectile(destoyPosition, fxOnDestroy);
         }
-        else if (IsLayerMatched(attackData.target.value, collision.gameObject.layer))
+        else if (IsLayerMatched(attackData.target1.value, collision.gameObject.layer) ||
+                 IsLayerMatched(attackData.target2.value, collision.gameObject.layer))
         {
             HealthSystem healthSystem = collision.GetComponent<HealthSystem>();
             if (healthSystem != null)
@@ -83,7 +86,7 @@ public class ProjectileController : MonoBehaviour
                 }
             }
 
-            DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy);
+            //DestroyProjectile(collision.ClosestPoint(transform.position), fxOnDestroy); 없애지 않음
         }
     }
 

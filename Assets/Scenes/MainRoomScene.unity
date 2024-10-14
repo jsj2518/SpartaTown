@@ -1682,6 +1682,37 @@ MonoBehaviour:
   InteractWithTutor: {fileID: 209355214}
   InteractWithTutorCanvas: {fileID: 209355215}
   TimeView: {fileID: 713686318}
+--- !u!1 &393626136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 393626137}
+  m_Layer: 6
+  m_Name: BulletSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &393626137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393626136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1689711583}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &400485583
 GameObject:
   m_ObjectHideFlags: 0
@@ -25363,6 +25394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 870940823}
   - component: {fileID: 870940822}
+  - component: {fileID: 870940824}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -25401,6 +25433,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &870940824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870940821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 309f751f44a8c13498678f01a0414eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: Poke
+    prefab: {fileID: 1714669628709125210, guid: ab9bdbd31c990c340910c09b3c9def2e, type: 3}
+    size: 100
 --- !u!1 &993108671
 GameObject:
   m_ObjectHideFlags: 0
@@ -34064,7 +34112,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 393626137}
   m_Father: {fileID: 1746679759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1746679757
@@ -34078,12 +34127,13 @@ GameObject:
   - component: {fileID: 1746679759}
   - component: {fileID: 1746679761}
   - component: {fileID: 1746679768}
+  - component: {fileID: 1746679763}
   - component: {fileID: 1746679762}
   - component: {fileID: 1746679767}
   - component: {fileID: 1746679766}
   - component: {fileID: 1746679765}
   - component: {fileID: 1746679764}
-  - component: {fileID: 1746679763}
+  - component: {fileID: 1746679769}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -34180,7 +34230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseStat:
     statsChangeType: 0
-    maxHealth: 0
+    maxHealth: 3
     speed: 5
     attackSO: {fileID: 11400000, guid: 344a7ee6c29699049a8568dd3ed6e525, type: 2}
   statModifiers: []
@@ -34272,6 +34322,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.25}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &1746679769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1746679757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1754fcb19d2d924439e4803cb6187dcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileSpawnPosition: {fileID: 393626137}
 --- !u!1 &1758748105
 GameObject:
   m_ObjectHideFlags: 0

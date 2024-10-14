@@ -13,24 +13,27 @@ public class FallIntoAbyss : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        controller = collision.GetComponent<PlayerInputController>();
-        moveAttribute = collision.GetComponent<TopDownMovement>();
-        rb = collision.GetComponent<Rigidbody2D>();
-
-        controller.BlockControl(true);
-        moveAttribute.enabled = false;
-        rb.gravityScale = 1f;
-        rb.freezeRotation = false;
-        Transform skinHolder = player.Find("SkinHolder");
-        if (skinHolder != null && skinHolder.childCount > 0)
+        if (GameManager.Instance.IsLayerMatchedWithPlayer(collision.gameObject.layer))
         {
-            Transform skin = skinHolder.GetChild(0);
-            Animator animator = skin.GetComponent<Animator>();
-            if (animator != null ) animator.speed = 0f;
-        }
-        Invoke("SetVelocityZero", 0.01f);
+            controller = collision.GetComponent<PlayerInputController>();
+            moveAttribute = collision.GetComponent<TopDownMovement>();
+            rb = collision.GetComponent<Rigidbody2D>();
 
-        uiController.PutAwayAll();
+            controller.BlockControl(true);
+            moveAttribute.enabled = false;
+            rb.gravityScale = 1f;
+            rb.freezeRotation = false;
+            Transform skinHolder = player.Find("SkinHolder");
+            if (skinHolder != null && skinHolder.childCount > 0)
+            {
+                Transform skin = skinHolder.GetChild(0);
+                Animator animator = skin.GetComponent<Animator>();
+                if (animator != null) animator.speed = 0f;
+            }
+            Invoke("SetVelocityZero", 0.01f);
+
+            uiController.PutAwayAll();
+        }
     }
 
     private void Update()
