@@ -14,7 +14,7 @@ public class PlayerNameChangeUI : MonoBehaviour
 
     public void OpenPlayerNameChangeMenu()
     {
-        playerController.gameObject.SetActive(false);
+        playerController.BlockControl(true);
         inputName_TMPInputField.GetComponent<TMP_InputField>().text = GameManager.Instance.PlayerName;
 
         uiController.DisableFloatingMenu(false);
@@ -25,11 +25,13 @@ public class PlayerNameChangeUI : MonoBehaviour
     {
         GameManager.Instance.PlayerName = inputName_TMPInputField.GetComponent<TMP_InputField>().text;
         playerController.ResetPlayerObject();
+        string newMemberTxt = $"¼ÛÁö¿ø Unity Æ©ÅÍ\n{GameManager.Instance.PlayerName}";
+        uiController.SetMemberViewText(newMemberTxt);
 
         uiController.EnableFloatingMenu();
         uiController.DisableChangePlayerName(true);
 
-        playerController.gameObject.SetActive(true);
+        playerController.BlockControl(false);
     }
 
     public void CancelPlayerNameChange()
@@ -37,6 +39,6 @@ public class PlayerNameChangeUI : MonoBehaviour
         uiController.EnableFloatingMenu();
         uiController.DisableChangePlayerName(true);
 
-        playerController.gameObject.SetActive(true);
+        playerController.BlockControl(false);
     }
 }

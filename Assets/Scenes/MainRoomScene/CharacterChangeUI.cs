@@ -14,7 +14,7 @@ public class CharacterChangeUI : MonoBehaviour
 
     public void OpenCharacterSelectMenu()
     {
-        playerController.gameObject.SetActive(false);
+        playerController.BlockControl(true);
 
         CharacterSelect = GameManager.Instance.CharacterSelect;
         uiController.GetCharacterImages()[CharacterSelect].gameObject.SetActive(true);
@@ -53,6 +53,6 @@ public class CharacterChangeUI : MonoBehaviour
         uiController.EnableFloatingMenu();
         uiController.DisableChangeCharacterMenu(true);
 
-        playerController.gameObject.SetActive(true);
+        playerController.BlockControl(false);
     }
 }

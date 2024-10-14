@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int CharacterSelect = 0;
     public string[] CharacterRace;
 
+    public bool CanInteractWithTutor;
+
     private void Awake()
     {
         if (Instance != null) Destroy(gameObject);

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
+using Image = UnityEngine.UI.Image;
+using Text = UnityEngine.UI.Text;
 
 public class UIController : MonoBehaviour
 {
@@ -30,9 +33,18 @@ public class UIController : MonoBehaviour
     [SerializeField] private CanvasGroup MemberViewMenuCanvas;
     [SerializeField] private Text TextMember;
 
-    private bool viewFloatingMenu, viewChangeCharacterMenu, viewChangePlayerName, viewMemberBtnMenu, viewMemberViewMenu;
-    private bool gotoFloatingMenu, gotoChangeCharacterMenu, gotoChangePlayerName, gotoMemberBtnMenu, gotoMemberViewMenu;
-    private bool canInteractFloatingMenu, canInteractChangeCharacterMenu, canInteractChangePlayerName, canInteractMemberBtnMenu, canInteractMemberViewMenu;
+    [Header("Interact With Tutor")]
+    [SerializeField] private RectTransform InteractWithTutor;
+    [SerializeField] private CanvasGroup InteractWithTutorCanvas;
+
+
+    [Header("ETC")]
+    [SerializeField] private RectTransform TimeView;
+
+
+    private bool viewFloatingMenu, viewChangeCharacterMenu, viewChangePlayerName, viewMemberBtnMenu, viewMemberViewMenu, viewInteractWithTutor;
+    private bool gotoFloatingMenu, gotoChangeCharacterMenu, gotoChangePlayerName, gotoMemberBtnMenu, gotoMemberViewMenu, gotoInteractWithTutor;
+    private bool canInteractFloatingMenu, canInteractChangeCharacterMenu, canInteractChangePlayerName, canInteractMemberBtnMenu, canInteractMemberViewMenu, canInteractWithTutor;
 
     private readonly Vector3 FloatingMenuEnablePos = new Vector3(0, 0);
     private readonly Vector3 FloatingMenuDisablePos = new Vector3(0, -200);
@@ -41,15 +53,18 @@ public class UIController : MonoBehaviour
     private readonly Vector3 ChangePlayerNameEnablePos = new Vector3(0, 0);
     private readonly Vector3 ChangePlayerNameDisablePos = new Vector3(0, -1000);
     private readonly Vector3 MemberBtnMenuEnablePos = new Vector3(0, 0);
-    private readonly Vector3 MemberBtnMenuDisablePos = new Vector3(0, -200);
+    private readonly Vector3 MemberBtnMenuDisablePos = new Vector3(300, 0);
     private readonly Vector3 MemberViewMenuEnablePos = new Vector3(-200, 0);
     private readonly Vector3 MemberViewMenuDisablePos = new Vector3(250, 0);
+    private readonly Vector3 InteractWithTutorEnablePos = new Vector3(0, -300);
+    private readonly Vector3 InteractWithTutorDisablePos = new Vector3(0, -750);
 
     private Vector3 FloatingMenuVelocity = Vector3.zero;
     private Vector3 ChangeCharacterMenuVelocity = Vector3.zero;
     private Vector3 ChangePlayerNameVelocity = Vector3.zero;
     private Vector3 MemberBtnMenuVelocity = Vector3.zero;
     private Vector3 MemberViewMenuVelocity = Vector3.zero;
+    private Vector3 InteractWithTutorVelocity = Vector3.zero;
 
     private void Start()
     {
@@ -58,18 +73,21 @@ public class UIController : MonoBehaviour
         viewChangePlayerName = false;
         viewMemberBtnMenu = true;
         viewMemberViewMenu = false;
+        viewInteractWithTutor = false;
 
         gotoFloatingMenu = true;
         gotoChangeCharacterMenu = false;
         gotoChangePlayerName = false;
         gotoMemberBtnMenu = true;
         gotoMemberViewMenu = false;
+        gotoInteractWithTutor = false;
 
         canInteractFloatingMenu = true;
         canInteractChangeCharacterMenu = true;
         canInteractChangePlayerName = true;
         canInteractMemberBtnMenu = true;
         canInteractMemberViewMenu = true;
+        canInteractWithTutor = true;
 
         Image[] tempImages = CharacterImageHolder.GetComponentsInChildren<Image>(true);
         characterImages = new Image[tempImages.Length - 1];
@@ -77,6 +95,9 @@ public class UIController : MonoBehaviour
         {
             characterImages[i] = tempImages[i + 1];
         }
+
+        string initialMemberTxt = $"¼ÛÁö¿ø Unity Æ©ÅÍ\n{GameManager.Instance.PlayerName}";
+        SetMemberViewText(initialMemberTxt);
     }
 
     private void Update()
@@ -129,6 +150,16 @@ public class UIController : MonoBehaviour
         {
             MemberViewMenu.anchoredPosition = Vector3.SmoothDamp(MemberViewMenu.anchoredPosition, MemberViewMenuDisablePos, ref MemberViewMenuVelocity, 0.05f);
         }
+
+
+        if (viewInteractWithTutor == false && gotoInteractWithTutor == true)
+        {
+            InteractWithTutor.anchoredPosition = Vector3.SmoothDamp(InteractWithTutor.anchoredPosition, InteractWithTutorEnablePos, ref InteractWithTutorVelocity, 0.05f);
+        }
+        else if (viewInteractWithTutor == true && gotoInteractWithTutor == false)
+        {
+            InteractWithTutor.anchoredPosition = Vector3.SmoothDamp(InteractWithTutor.anchoredPosition, InteractWithTutorDisablePos, ref InteractWithTutorVelocity, 0.05f);
+        }
     }
 
 
@@ -138,10 +169,10 @@ public class UIController : MonoBehaviour
         if (canInteractFloatingMenu == false) return;
         canInteractFloatingMenu = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         gotoFloatingMenu = true;
-        if (viewFloatingMenu == false) delay = 0.5f;
+        if (viewFloatingMenu == false) delay = 0.3f;
 
         Invoke("_EnableFloatingMenu", delay);
     }
@@ -160,12 +191,12 @@ public class UIController : MonoBehaviour
 
         FloatingMenuCanvas.interactable = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         if (putAway)
         {
             gotoFloatingMenu = false;
-            if (viewFloatingMenu == true) delay = 0.5f;
+            if (viewFloatingMenu == true) delay = 0.3f;
         }
 
         Invoke("_DisableFloatingMenu", delay);
@@ -183,10 +214,10 @@ public class UIController : MonoBehaviour
         if (canInteractChangeCharacterMenu == false) return;
         canInteractChangeCharacterMenu = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         gotoChangeCharacterMenu = true;
-        if (viewChangeCharacterMenu == false) delay = 0.5f;
+        if (viewChangeCharacterMenu == false) delay = 0.3f;
 
         Invoke("_EnableChangeCharacterMenu", delay);
     }
@@ -205,12 +236,12 @@ public class UIController : MonoBehaviour
 
         ChangeCharacterCanvas.interactable = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         if (putAway)
         {
             gotoChangeCharacterMenu = false;
-            if (viewChangeCharacterMenu == true) delay = 0.5f;
+            if (viewChangeCharacterMenu == true) delay = 0.3f;
         }
 
         Invoke("_DisableChangeCharacterMenu", delay);
@@ -228,10 +259,10 @@ public class UIController : MonoBehaviour
         if (canInteractChangePlayerName == false) return;
         canInteractChangePlayerName = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         gotoChangePlayerName = true;
-        if (viewChangePlayerName == false) delay = 0.5f;
+        if (viewChangePlayerName == false) delay = 0.3f;
 
         Invoke("_EnableChangePlayerName", delay);
     }
@@ -250,12 +281,12 @@ public class UIController : MonoBehaviour
 
         ChangePlayerNameCanvas.interactable = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         if (putAway)
         {
             gotoChangePlayerName = false;
-            if (viewChangePlayerName == true) delay = 0.5f;
+            if (viewChangePlayerName == true) delay = 0.3f;
         }
 
         Invoke("_DisableChangePlayerName", delay);
@@ -273,10 +304,10 @@ public class UIController : MonoBehaviour
         if (canInteractMemberBtnMenu == false) return;
         canInteractMemberBtnMenu = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         gotoMemberBtnMenu = true;
-        if (viewMemberBtnMenu == false) delay = 0.5f;
+        if (viewMemberBtnMenu == false) delay = 0.3f;
 
         Invoke("_EnableMemberBtnMenu", delay);
     }
@@ -295,12 +326,12 @@ public class UIController : MonoBehaviour
 
         MemberBtnMenuCanvas.interactable = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         if (putAway)
         {
             gotoMemberBtnMenu = false;
-            if (viewMemberBtnMenu == true) delay = 0.5f;
+            if (viewMemberBtnMenu == true) delay = 0.3f;
         }
 
         Invoke("_DisableMemberBtnMenu", delay);
@@ -318,10 +349,10 @@ public class UIController : MonoBehaviour
         if (canInteractMemberViewMenu == false) return;
         canInteractMemberViewMenu = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         gotoMemberViewMenu = true;
-        if (viewMemberViewMenu == false) delay = 0.5f;
+        if (viewMemberViewMenu == false) delay = 0.3f;
 
         Invoke("_EnableMemberViewMenu", delay);
     }
@@ -340,12 +371,12 @@ public class UIController : MonoBehaviour
 
         MemberViewMenuCanvas.interactable = false;
 
-        float delay = 0.1f;
+        float delay = 0.01f;
 
         if (putAway)
         {
             gotoMemberViewMenu = false;
-            if (viewMemberViewMenu == true) delay = 0.5f;
+            if (viewMemberViewMenu == true) delay = 0.3f;
         }
 
         Invoke("_DisableMemberViewMenu", delay);
@@ -355,6 +386,51 @@ public class UIController : MonoBehaviour
         viewMemberViewMenu = gotoMemberViewMenu;
 
         canInteractMemberViewMenu = true;
+    }
+
+    // Interact With Tutor ///////////////////////////////////////////////////////////////////
+    public void EnableInteractWithTutor()
+    {
+        if (canInteractWithTutor == false) return;
+        canInteractWithTutor = false;
+
+        float delay = 0.01f;
+
+        gotoInteractWithTutor = true;
+        if (viewInteractWithTutor == false) delay = 0.3f;
+
+        Invoke("_EnableInteractWithTutor", delay);
+    }
+    private void _EnableInteractWithTutor()
+    {
+        InteractWithTutorCanvas.interactable = true;
+
+        viewInteractWithTutor = gotoInteractWithTutor;
+
+        canInteractWithTutor = true;
+    }
+    public void DisableInteractWithTutor(bool putAway)
+    {
+        if (canInteractWithTutor == false) return;
+        canInteractWithTutor = false;
+
+        InteractWithTutorCanvas.interactable = false;
+
+        float delay = 0.01f;
+
+        if (putAway)
+        {
+            gotoInteractWithTutor = false;
+            if (viewInteractWithTutor == true) delay = 0.3f;
+        }
+
+        Invoke("_DisableInteractWithTutor", delay);
+    }
+    private void _DisableInteractWithTutor()
+    {
+        viewInteractWithTutor = gotoInteractWithTutor;
+
+        canInteractWithTutor = true;
     }
 
 
@@ -369,5 +445,16 @@ public class UIController : MonoBehaviour
     public void SetMemberViewText(string text)
     {
         TextMember.text = text;
+    }
+
+    public void PutAwayAll()
+    {
+        DisableFloatingMenu(true);
+        DisableChangeCharacterMenu(true);
+        DisableChangePlayerName(true);
+        DisableMemberBtnMenu(true);
+        DisableMemberViewMenu(true);
+        DisableInteractWithTutor(true);
+        TimeView.gameObject.SetActive(false);
     }
 }

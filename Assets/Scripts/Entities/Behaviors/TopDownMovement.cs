@@ -38,7 +38,7 @@ public class TopDownMovement : MonoBehaviour
             knockbackDuration -= Time.deltaTime;
         }
     }
-
+    
     private void ApplyMovement(Vector2 direction)
     {
         direction = direction * characterStatsHandler.currentStat.speed;
