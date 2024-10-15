@@ -49,7 +49,7 @@ public class TopDownShooting : MonoBehaviour
         GameObject obj = GameManager.Instance.objectPool.SpawnFromPool(rangedAttackSO.bulletNameTag);
         obj.transform.position = projectileSpawnPosition.position;
         ProjectileController attackController = obj.GetComponent<ProjectileController>();
-        attackController.InitializeAttack(RotateVector2(aimDirection, angle), rangedAttackSO);
+        attackController.InitializeAttack(gameObject, RotateVector2(aimDirection, angle), rangedAttackSO);
     }
 
     private Vector2 RotateVector2(Vector2 v, float angle)

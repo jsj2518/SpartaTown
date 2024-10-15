@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -40,6 +41,8 @@ public class UIController : MonoBehaviour
 
     [Header("ETC")]
     [SerializeField] private RectTransform TimeView;
+    [SerializeField] private RectTransform FadeInOut;
+    [SerializeField] private float FadeTime;
 
 
     private bool viewFloatingMenu, viewChangeCharacterMenu, viewChangePlayerName, viewMemberBtnMenu, viewMemberViewMenu, viewInteractWithTutor;
@@ -65,6 +68,13 @@ public class UIController : MonoBehaviour
     private Vector3 MemberBtnMenuVelocity = Vector3.zero;
     private Vector3 MemberViewMenuVelocity = Vector3.zero;
     private Vector3 InteractWithTutorVelocity = Vector3.zero;
+
+    private Image FadeImage;
+    private bool IsFading;
+    private float FadeTimeLapse;
+    private int FadeProgress;
+    private Action DeathSequenceHalfCallback;
+    private Action DeathSequenceEndCallback;
 
     private void Start()
     {
@@ -98,6 +108,8 @@ public class UIController : MonoBehaviour
 
         string initialMemberTxt = $"¼ÛÁö¿ø Unity Æ©ÅÍ\n{GameManager.Instance.PlayerName}";
         SetMemberViewText(initialMemberTxt);
+
+        FadeImage = FadeInOut.GetComponent<Image>();
     }
 
     private void Update()
@@ -159,6 +171,50 @@ public class UIController : MonoBehaviour
         else if (viewInteractWithTutor == true && gotoInteractWithTutor == false)
         {
             InteractWithTutor.anchoredPosition = Vector3.SmoothDamp(InteractWithTutor.anchoredPosition, InteractWithTutorDisablePos, ref InteractWithTutorVelocity, 0.05f);
+        }
+
+
+        if (IsFading)
+        {
+            FadeTimeLapse += Time.deltaTime;
+            if (FadeProgress == 0)
+            {
+                float timeNext = FadeTime / 3;
+                if (FadeTimeLapse < timeNext)
+                {
+                    float alpha = (FadeTimeLapse - timeNext) / timeNext + 1;
+                    FadeImage.color = new Color(0, 0, 0, alpha);
+                }
+                else
+                {
+                    EnableFloatingMenu();
+                    EnableMemberBtnMenu();
+                    FadeProgress++;
+                    DeathSequenceHalfCallback?.Invoke();
+                }
+            }
+            else if(FadeProgress == 1)
+            {
+                float timeNext = FadeTime * 2 / 3;
+                if (FadeTimeLapse > timeNext)
+                {
+                    FadeProgress++;
+                }
+            }
+            else
+            {
+                if (FadeTimeLapse < FadeTime)
+                {
+                    float alpha = 3 - (FadeTimeLapse * 3 / FadeTime);
+                    FadeImage.color = new Color(0, 0, 0, alpha);
+                }
+                else
+                {
+                    FadeInOut.gameObject.SetActive(false);
+                    DeathSequenceEndCallback?.Invoke();
+                    IsFading = false;
+                }
+            }
         }
     }
 
@@ -456,5 +512,20 @@ public class UIController : MonoBehaviour
         DisableMemberViewMenu(true);
         DisableInteractWithTutor(true);
         TimeView.gameObject.SetActive(false);
+    }
+    public void DeathSequence(Action deathSequenceHalfCallback, Action deathSequenceEndCallback)
+    {
+        DeathSequenceHalfCallback = deathSequenceHalfCallback;
+        DeathSequenceEndCallback = deathSequenceEndCallback;
+        DisableFloatingMenu(false);
+        DisableChangeCharacterMenu(true);
+        DisableChangePlayerName(true);
+        DisableMemberBtnMenu(false);
+        DisableMemberViewMenu(true);
+        DisableInteractWithTutor(true);
+        FadeInOut.gameObject.SetActive(true);
+        FadeTimeLapse = 0;
+        FadeProgress = 0;
+        IsFading = true;
     }
 }

@@ -26,7 +26,7 @@ public class HealthSystem : MonoBehaviour
 
     private void Start()
     {
-        CurrentHealth = MaxHealth;
+        ResetHealth();
     }
 
     private void Update()
@@ -40,6 +40,11 @@ public class HealthSystem : MonoBehaviour
                 isAttacked = false;
             }
         }
+    }
+
+    public void ResetHealth()
+    {
+        CurrentHealth = MaxHealth;
     }
 
     public bool ChangeHealth(float change)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,10 @@ public class PlayerInteractUI : MonoBehaviour
     {
         uiController.DisableFloatingMenu(true);
         uiController.EnableInteractWithTutor();
+    }
+    public void DeathSequence(Action deathSequenceHalfCallback, Action deathSequenceEndCallback)
+    {
+        uiController.DeathSequence(deathSequenceHalfCallback, deathSequenceEndCallback);
     }
 
 }

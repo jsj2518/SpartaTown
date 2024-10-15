@@ -14,6 +14,7 @@ public class PlayerInputController : TopDownController
     [SerializeField] private PlayerInteractUI playerInteractUI;
 
     private TopDownAnimationController topDownAnimationController;
+    private HealthSystem healthSystem;
 
 #pragma warning disable CS0108 // ¸â¹ö°¡ »ó¼ÓµÈ ¸â¹ö¸¦ ¼û±é´Ï´Ù. new Å°¿öµå°¡ ¾ø½À´Ï´Ù.
     private Camera camera;
@@ -26,13 +27,17 @@ public class PlayerInputController : TopDownController
         base.Awake();
 
         topDownAnimationController = GetComponent<TopDownAnimationController>();
+        healthSystem = GetComponent<HealthSystem>();
         camera = Camera.main;
     }
 
     protected void Start()
     {
         ResetPlayerObject();
+        healthSystem.OnDeath += Death;
     }
+
+
 
     public void ResetPlayerObject()
     {
@@ -53,6 +58,8 @@ public class PlayerInputController : TopDownController
             blockControl = false;
         }
     }
+
+
 
     protected void FixedUpdate()
     {
@@ -76,6 +83,10 @@ public class PlayerInputController : TopDownController
     {
         camera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
+
+
+
+    // Player Input //////////////////////////////////////////////////
 
     public void OnMove(InputValue value)
     {
@@ -102,5 +113,26 @@ public class PlayerInputController : TopDownController
             playerInteractUI.SetActivate(false);
             playerInteractUI.OpenInteractWithTutor();
         }
+    }
+
+    // ////////////////////////////////////////////////////////////////
+
+
+
+    private void Death()
+    {
+        BlockControl(true);
+        playerInteractUI.DeathSequence(DeathSequenceHalfCallback, DeathSequenceEndCallback);
+    }
+    private void DeathSequenceHalfCallback()
+    {
+        transform.position = new Vector3(0, -1, 0);
+        healthSystem.ResetHealth();
+        ResetPlayerObject();
+    }
+    private void DeathSequenceEndCallback()
+    {
+        BlockControl(false);
+        topDownAnimationController.SetAnimator(SkinHolder.GetAnimator());
     }
 }

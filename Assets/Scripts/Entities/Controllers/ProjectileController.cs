@@ -6,6 +6,7 @@ public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private LayerMask levelCollisionLayer;
 
+    private GameObject shooter;
     private bool isReady;
 
 #pragma warning disable CS0108 // ¸â¹ö°¡ »ó¼ÓµÈ ¸â¹ö¸¦ ¼û±é´Ï´Ù. new Å°¿öµå°¡ ¾ø½À´Ï´Ù.
@@ -44,8 +45,10 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
-    public void InitializeAttack(Vector2 direction, RangedAttackSO attackData)
+    public void InitializeAttack(GameObject subject, Vector2 direction, RangedAttackSO attackData)
     {
+        shooter = subject;
+
         this.attackData = attackData;
         this.direction = direction;
 
@@ -72,8 +75,8 @@ public class ProjectileController : MonoBehaviour
             Vector2 destoyPosition = collision.ClosestPoint(transform.position) - direction * 0.2f;
             DestroyProjectile(destoyPosition, fxOnDestroy);
         }
-        else if (IsLayerMatched(attackData.target1.value, collision.gameObject.layer) ||
-                 IsLayerMatched(attackData.target2.value, collision.gameObject.layer))
+        else if ((IsLayerMatched(attackData.target1.value, collision.gameObject.layer) ||
+                 IsLayerMatched(attackData.target2.value, collision.gameObject.layer))/* && collision.gameObject != shooter*/)
         {
             HealthSystem healthSystem = collision.GetComponent<HealthSystem>();
             if (healthSystem != null)
